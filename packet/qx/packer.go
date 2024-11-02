@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"go-game-utils/packet"
+	"google.golang.org/protobuf/proto"
 	"io"
 	"log"
 	"sync"
@@ -163,7 +164,22 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 		buf  = &bytes.Buffer{}
 	)
 
-	buf.Grow(size)
+	if p.opts.isProto {
+		buf.Grow(size + defaultClientAppendLength)
+		head := Head{}
+		head.Length = msg.length
+		head.Mainid = msg.mainID
+		head.Subid = msg.subID
+		headData, _ := proto.Marshal(&head)
+		buf.Write(headData)
+		buf.Write(msg.data)
+
+		log.Println(buf.Bytes())
+
+		return buf.Bytes(), nil
+	} else {
+		buf.Grow(size)
+	}
 
 	err := binary.Write(buf, p.opts.byteOrder, int32(size))
 	if err != nil {
@@ -196,6 +212,27 @@ func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
 		size   uint32
 	)
 
+	msg := new(Message)
+
+	if p.opts.isProto {
+		ln += defaultClientAppendLength
+
+		if len(data)-ln < 0 {
+			return nil, errors.New("ErrInvalidMessage1")
+		}
+
+		head := Head{}
+		err := proto.Unmarshal(data[:ln], &head)
+		if err != nil {
+			return msg, err
+		}
+		msg.length = head.GetLength()
+		msg.mainID = head.GetMainid()
+		msg.subID = head.GetSubid()
+		msg.data = data[ln:]
+		return msg, nil
+	}
+
 	if len(data)-ln < 0 {
 		return nil, errors.New("ErrInvalidMessage1")
 	}
@@ -209,7 +246,6 @@ func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
 		return nil, errors.New("ErrInvalidMessage2")
 	}
 
-	msg := new(Message)
 	msg.length = int32(size)
 
 	var mainid int32

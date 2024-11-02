@@ -7,11 +7,11 @@ import (
 )
 
 // Format: |--Length(4)--|--MainID(4)--|--SubID(4)--|--Data(variable)--|
-
 const (
-	defaultSizeBytes   = 4
-	defaultMainIdBytes = 4
-	defaultSubIdBytes  = 4
+	defaultSizeBytes          = 4
+	defaultMainIdBytes        = 4
+	defaultSubIdBytes         = 4
+	defaultClientAppendLength = 3
 
 	defaultBufferBytes = 5000
 	defaultEndian      = packet.LittleEndian
@@ -28,6 +28,9 @@ type options struct {
 
 	// 大小端
 	endian string
+
+	// proto
+	isProto bool
 }
 
 type Option func(o *options)
@@ -57,6 +60,10 @@ func WithByteOrder(byteOrder binary.ByteOrder) Option {
 // WithBufferBytes 设置消息字节数
 func WithBufferBytes(bufferBytes int) Option {
 	return func(o *options) { o.bufferBytes = bufferBytes }
+}
+
+func WithIsProto(isProto bool) Option {
+	return func(o *options) { o.isProto = isProto }
 }
 
 // WithEndian  大小端

@@ -15,3 +15,16 @@ tag:
 	git tag v0.0.1
 	git push --tags
 	@echo "\n tags 发布中..."
+
+
+proto:
+	@echo ===================================== Compiling Proto Files ============================================
+	@find packet -name "*.proto" -type f | while read f; do \
+		echo "Compiling: $$f"; \
+		protoc --proto_path=. \
+			   --go_out=. \
+   			   --go_opt=paths=source_relative \
+			   "$$f" || exit 1; \
+		echo "Compiled: $$f"; \
+	done
+	@echo "All proto files compiled successfully!"

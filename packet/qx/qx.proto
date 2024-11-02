@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option go_package = "./;qx";
+package qx;
+
+message Head
+{
+  sfixed32 length = 1;
+  sfixed32 mainid = 2;
+  sfixed32 subid = 3;
+}
