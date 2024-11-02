@@ -27,7 +27,7 @@ func (that *Message) GetSubID() int32 {
 }
 
 func NewMessage(mainId, subId int32, data []byte) *Message {
-	le := 12 + len(data)
+	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 	return &Message{
 		length: int32(le),
 		mainID: mainId,
