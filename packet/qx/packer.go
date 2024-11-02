@@ -173,9 +173,6 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 		headData, _ := proto.Marshal(&head)
 		buf.Write(headData)
 		buf.Write(msg.data)
-
-		log.Println(buf.Bytes())
-
 		return buf.Bytes(), nil
 	} else {
 		buf.Grow(size)
