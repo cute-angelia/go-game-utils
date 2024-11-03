@@ -8,11 +8,13 @@ type Message struct {
 	data   []byte // Payload data
 }
 
+const MaxSubId = 10000000
+
 func (that *Message) Type() string {
 	return "qx"
 }
 func (that *Message) Route() int32 {
-	return that.mainID*10000000 + that.subID
+	return EncodeRoute(that.mainID, that.subID)
 }
 
 func (that *Message) Data() []byte {
@@ -34,4 +36,16 @@ func NewMessage(mainId, subId int32, data []byte) *Message {
 		subID:  subId,
 		data:   data,
 	}
+}
+
+// EncodeRoute 组合两个ID成为一个数字
+func EncodeRoute(mainID, subID int32) int32 {
+	return mainID*MaxSubId + subID
+}
+
+// DecodeRoute 解码组合后的数字，返回 mainID 和 subID
+func DecodeRoute(combinedID int32) (mainID, subID int32) {
+	mainID = combinedID / MaxSubId
+	subID = combinedID % MaxSubId
+	return
 }
