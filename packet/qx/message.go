@@ -12,7 +12,7 @@ func (that *Message) Type() string {
 	return "qx"
 }
 func (that *Message) Route() int32 {
-	return that.mainID + that.subID
+	return that.mainID*10000000 + that.subID
 }
 
 func (that *Message) Data() []byte {
