@@ -32,7 +32,8 @@ func (that *Message) GetData() []byte {
 	return that.data.([]byte)
 }
 
-// 特殊方法
+// ==================== 特殊方法 ======================
+
 func (that *Message) GetMainID() int32 {
 	return that.mainID
 }

@@ -11,6 +11,8 @@ type Packer interface {
 	PackHeartbeat() ([]byte, error)
 	// CheckHeartbeat 检测心跳包
 	CheckHeartbeat(data []byte) (bool, error)
+	// UnmarshalData 反解析
+	UnmarshalData(data []byte, v interface{}) error
 }
 
 type Message interface {

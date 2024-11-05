@@ -218,3 +218,13 @@ func (p *Packer) PackHeartbeat() ([]byte, error) {
 func (p *Packer) CheckHeartbeat(data []byte) (bool, error) {
 	return true, nil
 }
+
+// UnmarshalData Data
+func (p *Packer) UnmarshalData(data []byte, v interface{}) error {
+	if p.opts.codeC != nil {
+		return p.opts.codeC.Unmarshal(data, v)
+	} else {
+		v = data
+		return nil
+	}
+}

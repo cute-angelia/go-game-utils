@@ -2,6 +2,7 @@ package muys
 
 import (
 	"encoding/binary"
+	"github.com/cute-angelia/go-game-utils/encoding"
 	"strings"
 )
 
@@ -29,6 +30,9 @@ type options struct {
 
 	// 大小端
 	endian string
+
+	// 编码器
+	codeC encoding.Codec
 }
 
 type Option func(o *options)
@@ -37,6 +41,7 @@ func defaultOptions() *options {
 	opts := &options{
 		byteOrder:   binary.BigEndian,
 		bufferBytes: defaultBufferBytes,
+		codeC:       nil,
 	}
 
 	endian := defaultEndian

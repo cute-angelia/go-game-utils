@@ -82,6 +82,7 @@ func TestQx3(t *testing.T) {
 
 	// 解析 pb
 	hresp := qx.TestData{}
+
 	msgdecode.UnmarshalPb(&hresp)
 	t.Logf("%+v", &hresp)
 }
