@@ -2,6 +2,7 @@ package qx
 
 import (
 	"encoding/binary"
+	"github.com/cute-angelia/go-game-utils/encoding"
 	"strings"
 )
 
@@ -35,6 +36,9 @@ type options struct {
 
 	// client 特殊处理
 	isClient bool
+
+	// 编码器
+	codeC encoding.Codec
 }
 
 type Option func(o *options)
@@ -43,6 +47,7 @@ func defaultOptions() *options {
 	opts := &options{
 		byteOrder:   binary.BigEndian,
 		bufferBytes: defaultBufferBytes,
+		codeC:       encoding.Invoke("proto"),
 	}
 
 	endian := defaultEndian
@@ -66,8 +71,25 @@ func WithBufferBytes(bufferBytes int) Option {
 	return func(o *options) { o.bufferBytes = bufferBytes }
 }
 
-func WithIsProto(isClient bool) Option {
+func WithIsClient(isClient bool) Option {
 	return func(o *options) { o.isClient = isClient }
+}
+
+func WithCodeC(codecName string) Option {
+	return func(o *options) {
+		switch codecName {
+		case "proto":
+			o.codeC = encoding.Invoke("proto")
+		case "json":
+			o.codeC = encoding.Invoke("json")
+		case "msgpack":
+			o.codeC = encoding.Invoke("msgpack")
+		case "xml":
+			o.codeC = encoding.Invoke("xml")
+		default:
+			o.codeC = nil
+		}
+	}
 }
 
 // WithEndian  大小端

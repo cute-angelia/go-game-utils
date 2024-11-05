@@ -14,9 +14,8 @@ type Packer interface {
 }
 
 type Message interface {
-	Type() string // 类型
-	Route() int32 // 路由
-	Data() []byte
+	Name() string // 类型
+	GetData() []byte
 }
 
 //func NewMessageQx(mainId, subId int32, data []byte) Message {

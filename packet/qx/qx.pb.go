@@ -83,6 +83,69 @@ func (x *Head) GetSubid() int32 {
 	return 0
 }
 
+type TestData struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code int32  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *TestData) Reset() {
+	*x = TestData{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_packet_qx_qx_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TestData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestData) ProtoMessage() {}
+
+func (x *TestData) ProtoReflect() protoreflect.Message {
+	mi := &file_packet_qx_qx_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TestData.ProtoReflect.Descriptor instead.
+func (*TestData) Descriptor() ([]byte, []int) {
+	return file_packet_qx_qx_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TestData) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *TestData) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *TestData) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_packet_qx_qx_proto protoreflect.FileDescriptor
 
 var file_packet_qx_qx_proto_rawDesc = []byte{
@@ -92,8 +155,12 @@ var file_packet_qx_qx_proto_rawDesc = []byte{
 	0x52, 0x06, 0x6c, 0x65, 0x6e, 0x67, 0x74, 0x68, 0x12, 0x16, 0x0a, 0x06, 0x6d, 0x61, 0x69, 0x6e,
 	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0f, 0x52, 0x06, 0x6d, 0x61, 0x69, 0x6e, 0x69, 0x64,
 	0x12, 0x14, 0x0a, 0x05, 0x73, 0x75, 0x62, 0x69, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0f, 0x52,
-	0x05, 0x73, 0x75, 0x62, 0x69, 0x64, 0x42, 0x07, 0x5a, 0x05, 0x2e, 0x2f, 0x3b, 0x71, 0x78, 0x62,
-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x05, 0x73, 0x75, 0x62, 0x69, 0x64, 0x22, 0x44, 0x0a, 0x08, 0x54, 0x65, 0x73, 0x74, 0x44, 0x61,
+	0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x42, 0x07, 0x5a, 0x05,
+	0x2e, 0x2f, 0x3b, 0x71, 0x78, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -108,9 +175,10 @@ func file_packet_qx_qx_proto_rawDescGZIP() []byte {
 	return file_packet_qx_qx_proto_rawDescData
 }
 
-var file_packet_qx_qx_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_packet_qx_qx_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_packet_qx_qx_proto_goTypes = []any{
-	(*Head)(nil), // 0: qx.Head
+	(*Head)(nil),     // 0: qx.Head
+	(*TestData)(nil), // 1: qx.TestData
 }
 var file_packet_qx_qx_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -138,6 +206,18 @@ func file_packet_qx_qx_proto_init() {
 				return nil
 			}
 		}
+		file_packet_qx_qx_proto_msgTypes[1].Exporter = func(v any, i int) any {
+			switch v := v.(*TestData); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -145,7 +225,7 @@ func file_packet_qx_qx_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_packet_qx_qx_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

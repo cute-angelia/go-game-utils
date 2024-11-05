@@ -155,24 +155,34 @@ func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
 func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 	msg := messageIn.(*Message)
 
-	if len(msg.data) > p.opts.bufferBytes {
+	// encoding
+	var data []byte
+	if p.opts.codeC != nil {
+		data, _ = p.opts.codeC.Marshal(msg.data)
+	} else {
+		data = msg.data.([]byte)
+	}
+
+	// large
+	if len(data) > p.opts.bufferBytes {
 		return nil, errors.New("ErrMessageTooLarge")
 	}
 
 	var (
-		size = defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(msg.data)
+		size = defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 		buf  = &bytes.Buffer{}
 	)
 
 	if p.opts.isClient {
 		buf.Grow(size + defaultClientAppendLength)
 		head := Head{}
-		head.Length = msg.length
+		head.Length = int32(len(data)) // 数据长度
 		head.Mainid = msg.mainID
 		head.Subid = msg.subID
-		headData, _ := proto.Marshal(&head)
+		headData, _ := proto.Marshal(&head) // 这里固定是 proto marshal  !=  p.opts.codeC.Marshal()
+
 		buf.Write(headData)
-		buf.Write(msg.data)
+		buf.Write(data)
 		return buf.Bytes(), nil
 	} else {
 		buf.Grow(size)
@@ -193,7 +203,7 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 		return nil, err
 	}
 
-	err = binary.Write(buf, p.opts.byteOrder, msg.data)
+	err = binary.Write(buf, p.opts.byteOrder, data)
 	if err != nil {
 		return nil, err
 	}
@@ -219,14 +229,16 @@ func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
 		}
 
 		head := Head{}
-		err := proto.Unmarshal(data[:ln], &head)
+		err := proto.Unmarshal(data[:ln], &head) // 固定
 		if err != nil {
 			return msg, err
 		}
 		msg.length = head.GetLength()
 		msg.mainID = head.GetMainid()
 		msg.subID = head.GetSubid()
+
 		msg.data = data[ln:]
+
 		return msg, nil
 	}
 

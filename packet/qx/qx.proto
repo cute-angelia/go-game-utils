@@ -9,3 +9,9 @@ message Head
   sfixed32 mainid = 2;
   sfixed32 subid = 3;
 }
+
+message TestData {
+  int32 code = 1;
+  string msg = 2;
+  string name = 3;
+}

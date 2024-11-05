@@ -6,14 +6,10 @@ type Message struct {
 	data   []byte // Payload data
 }
 
-func (that *Message) Type() string {
+func (that *Message) Name() string {
 	return "muys"
 }
-func (that *Message) Route() int32 {
-	return 0
-}
-
-func (that *Message) Data() []byte {
+func (that *Message) GetData() []byte {
 	return that.data
 }
 
