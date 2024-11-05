@@ -40,6 +40,10 @@ func (that *Message) GetSubID() int32 {
 	return that.subID
 }
 
+func (that *Message) UnmarshalPb(v proto.Message) error {
+	return UnmarshalPb(that.GetData(), v)
+}
+
 func UnmarshalPb[T proto.Message](buf []byte, v T) error {
 	return proto.Unmarshal(buf, v)
 }
