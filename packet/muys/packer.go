@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"go-game-utils/packet"
+	"github.com/cute-angelia/go-game-utils/packet"
 	"io"
 	"log"
 	"sync"

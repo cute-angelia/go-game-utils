@@ -1,10 +1,5 @@
 package packet
 
-const (
-	LittleEndian = "little"
-	BigEndian    = "big"
-)
-
 type Packer interface {
 	// ReadMessage 读取消息
 	ReadMessage(reader interface{}) ([]byte, error)

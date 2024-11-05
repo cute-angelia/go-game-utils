@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
-	"go-game-utils/buffer"
+	"github.com/cute-angelia/go-game-utils/buffer"
 	"testing"
 )
 

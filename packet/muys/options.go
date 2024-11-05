@@ -2,8 +2,12 @@ package muys
 
 import (
 	"encoding/binary"
-	"go-game-utils/packet"
 	"strings"
+)
+
+const (
+	LittleEndian = "little"
+	BigEndian    = "big"
 )
 
 // Format: |--Length(2)--|--Data(variable)--|
@@ -11,7 +15,7 @@ const (
 	defaultSizeBytes = 2 // uint16
 
 	defaultBufferBytes = 5000
-	defaultEndian      = packet.BigEndian
+	defaultEndian      = BigEndian
 )
 
 type options struct {
@@ -37,9 +41,9 @@ func defaultOptions() *options {
 
 	endian := defaultEndian
 	switch strings.ToLower(endian) {
-	case packet.LittleEndian:
+	case LittleEndian:
 		opts.byteOrder = binary.LittleEndian
-	case packet.BigEndian:
+	case BigEndian:
 		opts.byteOrder = binary.BigEndian
 	}
 
@@ -62,9 +66,9 @@ func WithEndian(endian string) Option {
 		o.endian = endian
 
 		switch strings.ToLower(endian) {
-		case packet.LittleEndian:
+		case LittleEndian:
 			o.byteOrder = binary.LittleEndian
-		case packet.BigEndian:
+		case BigEndian:
 			o.byteOrder = binary.BigEndian
 		}
 	}

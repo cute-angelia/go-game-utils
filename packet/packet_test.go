@@ -1,9 +1,9 @@
 package packet_test
 
 import (
-	"go-game-utils/packet"
-	"go-game-utils/packet/muys"
-	"go-game-utils/packet/qx"
+	"github.com/cute-angelia/go-game-utils/packet"
+	"github.com/cute-angelia/go-game-utils/packet/muys"
+	"github.com/cute-angelia/go-game-utils/packet/qx"
 	"testing"
 )
 

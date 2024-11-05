@@ -1,10 +1,10 @@
 package encoding
 
 import (
-	"go-game-utils/encoding/json"
-	"go-game-utils/encoding/msgpack"
-	"go-game-utils/encoding/proto"
-	"go-game-utils/encoding/xml"
+	"github.com/cute-angelia/go-game-utils/encoding/json"
+	"github.com/cute-angelia/go-game-utils/encoding/msgpack"
+	"github.com/cute-angelia/go-game-utils/encoding/proto"
+	"github.com/cute-angelia/go-game-utils/encoding/xml"
 	"log"
 )
 
