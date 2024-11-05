@@ -30,17 +30,7 @@ func (that *Message) GetSubID() int32 {
 	return that.subID
 }
 
-func NewMessage(mainId, subId int32, data []byte) *Message {
-	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
-	return &Message{
-		length: int32(le),
-		mainID: mainId,
-		subID:  subId,
-		data:   data,
-	}
-}
-
-func NewMessagePb(mainId, subId int32, pb proto.Message) *Message {
+func NewMessage(mainId, subId int32, pb proto.Message) *Message {
 	data, _ := proto.Marshal(pb)
 	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 	return &Message{
@@ -51,8 +41,7 @@ func NewMessagePb(mainId, subId int32, pb proto.Message) *Message {
 	}
 }
 
-func NewMessageClient(mainId, subId int32, pb proto.Message) *Message {
-	data, _ := proto.Marshal(pb)
+func NewMessageByte(mainId, subId int32, data []byte) *Message {
 	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 	return &Message{
 		length: int32(le),

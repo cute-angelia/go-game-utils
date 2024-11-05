@@ -10,7 +10,7 @@ var packer = qx.NewPacker(qx.WithEndian(qx.LittleEndian))
 var packer2 = qx.NewPacker(qx.WithEndian(qx.LittleEndian), qx.WithIsProto(true))
 
 func TestDefaultPacker_PackMessage(t *testing.T) {
-	msg := qx.NewMessage(311, 2, []byte("hello world"))
+	msg := qx.NewMessageByte(311, 2, []byte("hello world"))
 	data, err := packer.PackMessage(msg)
 
 	if err != nil {
@@ -33,7 +33,7 @@ func TestDefaultPacker_PackMessage(t *testing.T) {
 }
 
 func TestDefaultPackerProtobuf(t *testing.T) {
-	msg := qx.NewMessage(311, 2, []byte("hexllo world"))
+	msg := qx.NewMessageByte(311, 2, []byte("hexllo world"))
 	data, err := packer2.PackMessage(msg)
 
 	if err != nil {
