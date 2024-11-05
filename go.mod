@@ -1,4 +1,4 @@
-module go-game-utils
+module github.com/cute-angelia/go-game-utils
 
 go 1.23.1
 
