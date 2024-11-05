@@ -164,7 +164,7 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 		buf  = &bytes.Buffer{}
 	)
 
-	if p.opts.isProto {
+	if p.opts.isClient {
 		buf.Grow(size + defaultClientAppendLength)
 		head := Head{}
 		head.Length = msg.length
@@ -211,7 +211,7 @@ func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
 
 	msg := new(Message)
 
-	if p.opts.isProto {
+	if p.opts.isClient {
 		ln += defaultClientAppendLength
 
 		if len(data)-ln < 0 {

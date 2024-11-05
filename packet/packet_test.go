@@ -1,14 +1,13 @@
 package packet_test
 
 import (
-	"github.com/cute-angelia/go-game-utils/packet"
 	"github.com/cute-angelia/go-game-utils/packet/muys"
 	"github.com/cute-angelia/go-game-utils/packet/qx"
 	"testing"
 )
 
-var packer = qx.NewPacker(qx.WithEndian(packet.LittleEndian))
-var packer2 = qx.NewPacker(qx.WithEndian(packet.LittleEndian), qx.WithIsProto(true))
+var packer = qx.NewPacker(qx.WithEndian(qx.LittleEndian))
+var packer2 = qx.NewPacker(qx.WithEndian(qx.LittleEndian), qx.WithIsProto(true))
 
 func TestDefaultPacker_PackMessage(t *testing.T) {
 	msg := qx.NewMessage(311, 2, []byte("hello world"))
@@ -57,7 +56,7 @@ func TestDefaultPackerProtobuf(t *testing.T) {
 }
 
 func TestDefaultPackerMuys(t *testing.T) {
-	var packer3 = muys.NewPacker(muys.WithEndian(packet.BigEndian))
+	var packer3 = muys.NewPacker(muys.WithEndian(muys.BigEndian))
 
 	msg := muys.NewMessage([]byte("hello muys"))
 	data, err := packer3.PackMessage(msg)

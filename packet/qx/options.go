@@ -33,8 +33,8 @@ type options struct {
 	// 大小端
 	endian string
 
-	// proto
-	isProto bool
+	// client 特殊处理
+	isClient bool
 }
 
 type Option func(o *options)
@@ -66,8 +66,8 @@ func WithBufferBytes(bufferBytes int) Option {
 	return func(o *options) { o.bufferBytes = bufferBytes }
 }
 
-func WithIsProto(isProto bool) Option {
-	return func(o *options) { o.isProto = isProto }
+func WithIsProto(isClient bool) Option {
+	return func(o *options) { o.isClient = isClient }
 }
 
 // WithEndian  大小端

@@ -1,5 +1,7 @@
 package qx
 
+import "google.golang.org/protobuf/proto"
+
 // Format: |--Length(4)--|--MainID(4)--|--SubID(4)--|--Data(variable)--|
 type Message struct {
 	length int32  // 总长度 = 【 12 (3个int32) + 包长 】
@@ -29,6 +31,28 @@ func (that *Message) GetSubID() int32 {
 }
 
 func NewMessage(mainId, subId int32, data []byte) *Message {
+	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
+	return &Message{
+		length: int32(le),
+		mainID: mainId,
+		subID:  subId,
+		data:   data,
+	}
+}
+
+func NewMessagePb(mainId, subId int32, pb proto.Message) *Message {
+	data, _ := proto.Marshal(pb)
+	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
+	return &Message{
+		length: int32(le),
+		mainID: mainId,
+		subID:  subId,
+		data:   data,
+	}
+}
+
+func NewMessageClient(mainId, subId int32, pb proto.Message) *Message {
+	data, _ := proto.Marshal(pb)
 	le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 	return &Message{
 		length: int32(le),
