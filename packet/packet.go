@@ -1,29 +1,20 @@
 package packet
 
-type Packer interface {
-	// ReadMessage 读取消息
-	ReadMessage(reader interface{}) ([]byte, error)
-	// PackMessage 打包消息
-	PackMessage(message Message) ([]byte, error)
-	// UnpackMessage 解包消息
-	UnpackMessage(data []byte) (Message, error)
-	// PackHeartbeat 打包心跳
-	PackHeartbeat() ([]byte, error)
-	// CheckHeartbeat 检测心跳包
-	CheckHeartbeat(data []byte) (bool, error)
-	// UnmarshalData 反解析
-	UnmarshalData(data []byte, v interface{}) error
-}
+import (
+	"github.com/cute-angelia/go-game-utils/packet/due"
+	"github.com/cute-angelia/go-game-utils/packet/ipacket"
+	"github.com/cute-angelia/go-game-utils/packet/muys"
+	"github.com/cute-angelia/go-game-utils/packet/qx"
+)
 
-type Message interface {
-	Name() string // 类型
-	GetData() []byte
+func GetDefaultPacker(packerName string) ipacket.Packer {
+	switch packerName {
+	case "due":
+		return due.NewPacker()
+	case "muys":
+		return muys.NewPacker()
+	case "qx":
+		return qx.NewPacker(qx.WithCodeC("proto"))
+	}
+	return nil
 }
-
-//func NewMessageQx(mainId, subId int32, data []byte) Message {
-//	return qx.NewMessage(mainId, subId, data)
-//}
-//
-//func NewPackerQx(endian string, bufferBytes int) *qx.Packer {
-//	return qx.NewPacker(qx.WithBufferBytes(bufferBytes), qx.WithEndian(endian))
-//}

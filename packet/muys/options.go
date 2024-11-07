@@ -78,3 +78,20 @@ func WithEndian(endian string) Option {
 		}
 	}
 }
+
+func WithCodeC(codecName string) Option {
+	return func(o *options) {
+		switch codecName {
+		case "proto":
+			o.codeC = encoding.Invoke("proto")
+		case "json":
+			o.codeC = encoding.Invoke("json")
+		case "msgpack":
+			o.codeC = encoding.Invoke("msgpack")
+		case "xml":
+			o.codeC = encoding.Invoke("xml")
+		default:
+			o.codeC = nil
+		}
+	}
+}

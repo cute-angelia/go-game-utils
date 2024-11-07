@@ -4,12 +4,15 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/cute-angelia/go-game-utils/packet"
+	"github.com/cute-angelia/go-game-utils/packet/ipacket"
 	"google.golang.org/protobuf/proto"
 	"io"
 	"log"
 	"sync"
 )
+
+// 校验
+var _ ipacket.Packer = &Packer{}
 
 type Packer struct {
 	opts             *options
@@ -152,7 +155,7 @@ func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
 }
 
 // PackMessage 打包消息
-func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
+func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 	msg := messageIn.(*Message)
 
 	// encoding
@@ -212,7 +215,7 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 }
 
 // UnpackMessage 解包消息
-func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
+func (p *Packer) UnpackMessage(data []byte) (ipacket.Message, error) {
 	var (
 		ln     = defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes
 		reader = bytes.NewReader(data)

@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"github.com/cute-angelia/go-game-utils/packet"
+	"github.com/cute-angelia/go-game-utils/packet/ipacket"
 	"io"
 	"log"
 	"sync"
@@ -151,7 +151,7 @@ func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
 }
 
 // PackMessage 打包消息
-func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
+func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 	msg := messageIn.(*Message)
 
 	if len(msg.data) > p.opts.bufferBytes {
@@ -179,7 +179,7 @@ func (p *Packer) PackMessage(messageIn packet.Message) ([]byte, error) {
 }
 
 // UnpackMessage 解包消息
-func (p *Packer) UnpackMessage(data []byte) (packet.Message, error) {
+func (p *Packer) UnpackMessage(data []byte) (ipacket.Message, error) {
 	var (
 		ln     = defaultSizeBytes
 		reader = bytes.NewReader(data)
