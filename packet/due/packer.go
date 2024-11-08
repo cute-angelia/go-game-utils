@@ -432,3 +432,7 @@ func (p *Packer) UnmarshalData(data []byte, v interface{}) error {
 		return nil
 	}
 }
+
+func (p *Packer) String() string {
+	return Name
+}

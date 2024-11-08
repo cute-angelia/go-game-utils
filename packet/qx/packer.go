@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"sync"
+	"time"
 )
 
 // 校验
@@ -157,15 +158,19 @@ func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
 // PackMessage 打包消息
 func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 	msg := messageIn.(*Message)
-
 	// encoding
 	var data []byte
 	if p.opts.codeC != nil {
-		data, _ = p.opts.codeC.Marshal(msg.data)
+		dataM, errm := p.opts.codeC.Marshal(msg.data)
+		if errm != nil {
+			log.Println(errm)
+			return data, errm
+		} else {
+			data = dataM
+		}
 	} else {
 		data = msg.data.([]byte)
 	}
-
 	// large
 	if len(data) > p.opts.bufferBytes {
 		return nil, errors.New("ErrMessageTooLarge")
@@ -175,7 +180,6 @@ func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 		size = defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 		buf  = &bytes.Buffer{}
 	)
-
 	if p.opts.isClient {
 		buf.Grow(size + defaultClientAppendLength)
 		head := Head{}
@@ -282,13 +286,17 @@ func (p *Packer) UnpackMessage(data []byte) (ipacket.Message, error) {
 // PackHeartbeat 打包心跳
 // 这里不实现
 func (p *Packer) PackHeartbeat() ([]byte, error) {
-	return []byte{}, nil
+	return p.PackMessage(NewMessage(1, 1, &HeartBeat{Timestamp: time.Now().Unix()}))
 }
 
 // CheckHeartbeat 检测心跳包
-// // 这里不实现
+// 这里不实现, 业务实现检测逻辑
 func (p *Packer) CheckHeartbeat(data []byte) (bool, error) {
-	return true, nil
+	//msg, _ := p.UnpackMessage(data)
+	//hb := HeartBeat{}
+	//p.UnmarshalData(msg.GetData(), &hb)
+	//log.Println(hb)
+	return false, nil
 }
 
 // UnmarshalData Data
@@ -299,4 +307,8 @@ func (p *Packer) UnmarshalData(data []byte, v interface{}) error {
 		v = data
 		return nil
 	}
+}
+
+func (p *Packer) String() string {
+	return Name
 }

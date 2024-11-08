@@ -289,7 +289,7 @@ func (c *clientConn) read() {
 			// check heartbeat packet
 			isHeartbeat, err := c.client.opts.packer.CheckHeartbeat(msg)
 			if err != nil {
-				log.Printf("check heartbeat message error: %v", err)
+				log.Printf("[%s] check heartbeat message error: %v", c.client.opts.packer.String(), err)
 				continue
 			}
 
@@ -311,6 +311,8 @@ func (c *clientConn) write() {
 		conn   = c.conn
 		ticker *time.Ticker
 	)
+
+	log.Println(c.client.opts.heartbeatInterval, "💓时间", c.client.opts.heartbeatInterval > 0)
 
 	if c.client.opts.heartbeatInterval > 0 {
 		ticker = time.NewTicker(c.client.opts.heartbeatInterval)
@@ -395,7 +397,9 @@ func (c *clientConn) doWrite(conn *websocket.Conn, r chWrite) bool {
 
 // 处理心跳
 func (c *clientConn) doHandleHeartbeat(conn *websocket.Conn) bool {
+
 	deadline := time.Now().Add(-2 * c.client.opts.heartbeatInterval).UnixNano()
+
 	if atomic.LoadInt64(&c.lastHeartbeatTime) < deadline {
 		log.Printf("connection heartbeat timeout, cid: %d", c.id)
 		_ = c.forceClose()
@@ -408,6 +412,11 @@ func (c *clientConn) doHandleHeartbeat(conn *websocket.Conn) bool {
 		if heartbeat, err := c.client.opts.packer.PackHeartbeat(); err != nil {
 			log.Printf("pack heartbeat message error: %v", err)
 		} else {
+
+			if c.client.opts.packer.String() != "qx" {
+				log.Println("发送心跳", heartbeat)
+			}
+
 			// send heartbeat packet
 			if err := conn.WriteMessage(websocket.BinaryMessage, heartbeat); err != nil {
 				log.Printf("write heartbeat message error: %v", err)

@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const Name = "muys"
+
 const (
 	LittleEndian = "little"
 	BigEndian    = "big"

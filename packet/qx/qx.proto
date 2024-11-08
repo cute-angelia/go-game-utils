@@ -10,6 +10,11 @@ message Head
   sfixed32 subid = 3;
 }
 
+message HeartBeat
+{
+  int64 Timestamp = 1;
+}
+
 message TestData {
   int32 code = 1;
   string msg = 2;

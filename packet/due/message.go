@@ -7,7 +7,7 @@ type Message struct {
 }
 
 func (that *Message) Name() string {
-	return "muys"
+	return Name
 }
 func (that *Message) GetData() []byte {
 	return that.Buffer

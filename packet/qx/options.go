@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const Name = "qx"
+
 const (
 	LittleEndian = "little"
 	BigEndian    = "big"

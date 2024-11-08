@@ -13,6 +13,8 @@ type Packer interface {
 	CheckHeartbeat(data []byte) (bool, error)
 	// UnmarshalData 反解析
 	UnmarshalData(data []byte, v interface{}) error
+	// String get name
+	String() string
 }
 
 type Message interface {

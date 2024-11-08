@@ -13,12 +13,11 @@ type Message struct {
 }
 
 func (that *Message) Name() string {
-	return "qx"
+	return Name
 }
 
+// data 需传入指针
 func NewMessage(mainId, subId int32, data any) *Message {
-	//data, _ := proto.Marshal(pb)
-	//le := defaultSizeBytes + defaultMainIdBytes + defaultSubIdBytes + len(data)
 	return &Message{
 		length: 0, // 获取 code 后设置
 		mainID: mainId,

@@ -216,7 +216,7 @@ func (p *Packer) PackHeartbeat() ([]byte, error) {
 // CheckHeartbeat 检测心跳包
 // // 这里不实现
 func (p *Packer) CheckHeartbeat(data []byte) (bool, error) {
-	return true, nil
+	return false, nil
 }
 
 // UnmarshalData Data
@@ -227,4 +227,8 @@ func (p *Packer) UnmarshalData(data []byte, v interface{}) error {
 		v = data
 		return nil
 	}
+}
+
+func (p *Packer) String() string {
+	return Name
 }

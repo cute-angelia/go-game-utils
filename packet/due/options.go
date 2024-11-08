@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+const Name = "due"
+
 // heartbeat packet
 // ------------------------------------------------------------------------------
 // | size(4 byte) = (1 byte + 8 byte) | header(1 byte) | heartbeat time(8 byte) |
