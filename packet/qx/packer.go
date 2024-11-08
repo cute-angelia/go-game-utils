@@ -60,8 +60,10 @@ func NewPacker(opts ...Option) *Packer {
 func (p *Packer) ReadMessage(reader interface{}) ([]byte, error) {
 	switch r := reader.(type) {
 	case NocopyReader:
+		log.Println("NocopyReader")
 		return p.nocopyReadMessage(r)
 	case io.Reader:
+		log.Println("io.Reader")
 		return p.copyReadMessage(r)
 	default:
 		return nil, errors.New("ErrInvalidReader")
@@ -109,25 +111,30 @@ func (p *Packer) nocopyReadMessage(reader NocopyReader) ([]byte, error) {
 
 // 拷贝读取消息
 func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
-	// 从 pool 获取一个 buffer
-	buf := p.readerSizePool.Get().([]byte)
+	// 从 pool 获取一个 size buffer = 4
+	sizeBuf := p.readerSizePool.Get().([]byte)
 	// 确保归还前清空 buffer 并归还到 pool
 	defer func() {
-		clear(buf)
-		p.readerSizePool.Put(buf)
+		clear(sizeBuf)
+		p.readerSizePool.Put(sizeBuf)
 	}()
 
-	_, err := io.ReadFull(reader, buf)
+	// ws 不走该协议
+	//if p.opts.isClient {
+	//	ln += defaultClientAppendLength
+	//}
+
+	// 读取头部
+	_, err := io.ReadFull(reader, sizeBuf)
 	if err != nil {
 		return nil, err
 	}
 
 	var size int32
-
 	if p.opts.byteOrder == binary.BigEndian {
-		size = int32(binary.BigEndian.Uint32(buf))
+		size = int32(binary.BigEndian.Uint32(sizeBuf))
 	} else {
-		size = int32(binary.LittleEndian.Uint32(buf))
+		size = int32(binary.LittleEndian.Uint32(sizeBuf))
 	}
 
 	if size == 0 {
@@ -144,10 +151,10 @@ func (p *Packer) copyReadMessage(reader io.Reader) ([]byte, error) {
 	}()
 
 	// 第一个 size
-	smallSlice := data[:size]
-	copy(smallSlice[:defaultSizeBytes], buf)
+	smallSlice := data[:size]                    // 获取一个完整包长度
+	copy(smallSlice[:defaultSizeBytes], sizeBuf) // 把 sizebuf 放进去
 
-	_, err = io.ReadFull(reader, smallSlice[defaultSizeBytes:])
+	_, err = io.ReadFull(reader, smallSlice[defaultSizeBytes:]) // 填充其他数据
 	if err != nil {
 		return nil, err
 	}

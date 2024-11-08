@@ -6,7 +6,7 @@ const MaxSubId = 10000000
 
 // Format: |--Length(4)--|--MainID(4)--|--SubID(4)--|--Data(variable)--|
 type Message struct {
-	length int32 // 总长度 = 【 12 (3个int32) + 包长 】
+	length int32 // 总长度 = 【 12 (3个int32) + 包长 】 || ws为包长
 	mainID int32 // Main ID of the packet
 	subID  int32 // Sub ID of the packet
 	data   any   // Payload data 根据 codec 变化
