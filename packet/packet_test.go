@@ -3,6 +3,7 @@ package packet_test
 import (
 	"github.com/cute-angelia/go-game-utils/encoding/proto"
 	"github.com/cute-angelia/go-game-utils/packet/muys"
+	"github.com/cute-angelia/go-game-utils/packet/muysV2"
 	"github.com/cute-angelia/go-game-utils/packet/qx"
 	"testing"
 )
@@ -101,5 +102,24 @@ func TestDefaultPackerMuys(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	t.Logf("name: %s", message.Name())
+}
+
+func TestMuysV2(t *testing.T) {
+	var packer3 = muysV2.NewPacker(muysV2.WithEndian(muys.BigEndian))
+	msg := muysV2.NewMessage(1, []byte("hello muys"))
+	data, err := packer3.PackMessage(msg)
+
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(data)
+
+	message, err := packer3.UnpackMessage(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(message)
 	t.Logf("name: %s", message.Name())
 }

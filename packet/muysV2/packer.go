@@ -1,13 +1,15 @@
-package muys
+package muysV2
 
 import (
 	"bytes"
 	"encoding/binary"
 	"errors"
 	"github.com/cute-angelia/go-game-utils/packet/ipacket"
+	"google.golang.org/protobuf/proto"
 	"io"
 	"log"
 	"sync"
+	"time"
 )
 
 type Packer struct {
@@ -70,12 +72,12 @@ func (p *Packer) nocopyReadMessage(reader NocopyReader) ([]byte, error) {
 		return nil, err
 	}
 
-	var size uint16
+	var size int32
 
 	if p.opts.byteOrder == binary.BigEndian {
-		size = binary.BigEndian.Uint16(buf)
+		size = int32(binary.BigEndian.Uint32(buf))
 	} else {
-		size = binary.LittleEndian.Uint16(buf)
+		size = int32(binary.LittleEndian.Uint32(buf))
 	}
 
 	if size == 0 {
@@ -159,17 +161,27 @@ func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 	}
 
 	var (
-		size = defaultSizeBytes + len(msg.data)
+		size = defaultSizeBytes + defaultTypeBytes + len(msg.data)
 		buf  = &bytes.Buffer{}
 	)
 
+	//log.Println(size, "pack", len(msg.data))
+
 	buf.Grow(size)
 
-	err := binary.Write(buf, p.opts.byteOrder, uint16(size))
+	// 4字节
+	err := binary.Write(buf, p.opts.byteOrder, uint32(size))
 	if err != nil {
 		return nil, err
 	}
 
+	// 2字节
+	err = binary.Write(buf, p.opts.byteOrder, uint16(msg.msgType))
+	if err != nil {
+		return nil, err
+	}
+
+	// 数据
 	err = binary.Write(buf, p.opts.byteOrder, msg.data)
 	if err != nil {
 		return nil, err
@@ -180,28 +192,31 @@ func (p *Packer) PackMessage(messageIn ipacket.Message) ([]byte, error) {
 
 // UnpackMessage 解包消息
 func (p *Packer) UnpackMessage(data []byte) (ipacket.Message, error) {
-	var (
-		ln     = defaultSizeBytes
-		reader = bytes.NewReader(data)
-		size   uint16
-	)
-
 	msg := new(Message)
+
+	var (
+		ln     = defaultSizeBytes + defaultTypeBytes
+		reader = bytes.NewReader(data)
+	)
 
 	if len(data)-ln < 0 {
 		return nil, errors.New("ErrInvalidMessage1")
 	}
 
-	err := binary.Read(reader, p.opts.byteOrder, &size)
+	err := binary.Read(reader, p.opts.byteOrder, &msg.length)
 	if err != nil {
 		return nil, err
 	}
 
-	if uint64(len(data)) != uint64(size) {
+	err = binary.Read(reader, p.opts.byteOrder, &msg.msgType)
+	if err != nil {
+		return nil, err
+	}
+
+	if uint64(len(data)) != uint64(msg.length) {
 		return nil, errors.New("ErrInvalidMessage2")
 	}
 
-	msg.length = size
 	msg.data = data[ln:]
 
 	return msg, nil
@@ -210,7 +225,15 @@ func (p *Packer) UnpackMessage(data []byte) (ipacket.Message, error) {
 // PackHeartbeat 打包心跳
 // 这里不实现
 func (p *Packer) PackHeartbeat() ([]byte, error) {
-	return []byte{}, nil
+	// body  =  id(4) + data
+	beat := HeartBeat{Timestamp: time.Now().Unix()}
+	msgBody, _ := proto.Marshal(&beat)
+
+	result := make([]byte, 4+len(msgBody))
+	binary.BigEndian.PutUint32(result[:4], 1)
+	copy(result[4:], msgBody)
+
+	return p.PackMessage(NewMessage(1, result))
 }
 
 // CheckHeartbeat 检测心跳包

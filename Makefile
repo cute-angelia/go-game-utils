@@ -12,7 +12,7 @@ tag:
 	git add .
 	git commit -am "init"
 	git push origin main
-	git tag v0.0.12
+	git tag v0.0.13
 	git push --tags
 	@echo "\n tags 发布中..."
 

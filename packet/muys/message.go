@@ -2,7 +2,7 @@ package muys
 
 // Format: |--Length(2)--|--Data(variable)--|
 type Message struct {
-	length int32  // 2字节 内容：仅仅消息长度
+	length uint16 // 2字节 内容：仅仅消息长度
 	data   []byte // Payload data
 }
 
@@ -16,7 +16,7 @@ func (that *Message) GetData() []byte {
 func NewMessage(data []byte) *Message {
 	le := defaultSizeBytes + len(data)
 	return &Message{
-		length: int32(le),
+		length: uint16(le),
 		data:   data,
 	}
 }

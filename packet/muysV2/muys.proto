@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "./;muysV2";
+package muysV2;
+
+message HeartBeat
+{
+  int64 Timestamp = 1;
+}
